@@ -1,24 +1,16 @@
-# Project Name
-
-(short, 1-3 sentenced, description of the project)
+# GitHub Release Notes Generator
+A serverless tool for generating a release notes document for projects hosted on GitHub.
 
 ## Features
 
-This project framework provides the following features:
-
-* Feature 1
-* Feature 2
-* ...
+The generator is a [function app](https://docs.microsoft.com/en-us/azure/azure-functions/functions-overview?WT.mc_id=demo-functions-jasmineg) containing a [GitHub webhook](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-github-webhook-triggered-function?WT.mc_id=demo-functions-jasmineg) function that creates a Markdown file whenever a new release is created, using [Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs?WT.mc_id=demo-functions-jasmineg).
 
 ## Getting Started
 
 ### Prerequisites
 
-(ideally very short, if any)
-
-- OS
-- Library version
-- ...
+- [Azure](https://azure.microsoft.com/en-us/free?WT.mc_id=demo-functions-jasmineg) account.
+- [GitHub](https://github.com/join) account with an active repository.
 
 ### Installation
 
