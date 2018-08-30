@@ -5,6 +5,12 @@ A serverless tool for generating a release notes document for projects hosted on
 
 ## Features
 
+![Example release on GitHub](images/exp_release.png)
+_Example release on GitHub_
+
+![Rendered markdown file of example release notes](images/renderednotes.png)
+_Rendered markdown file of example release notes_
+
 The generator is a [function app](https://docs.microsoft.com/en-us/azure/azure-functions/functions-overview?WT.mc_id=demo-functions-jasmineg) containing a [GitHub webhook](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-github-webhook-triggered-function?WT.mc_id=demo-functions-jasmineg) function that creates a Markdown file whenever a new release is created, using [Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs?WT.mc_id=demo-functions-jasmineg).
 
 ### Prerequisites
@@ -17,6 +23,9 @@ The generator is a [function app](https://docs.microsoft.com/en-us/azure/azure-f
 The following tutorial shows how to set up the function app from the Azure Portal:
 
 ### Create a Blob Container
+
+![Creating a new storage account container](images/newcontainer.png)
+
 1. Navigate to the Azure Portal and create a storage account. See the [Create a storage account quickstart](https://docs.microsoft.com/en-us/azure/storage/common/storage-quickstart-create-account?tabs=portal#create-a-general-purpose-storage-account?WT.mc_id=demo-functions-jasmineg) to get started. 
 2. Navigate to the new storage account, navigate to the **Blob Service** section, select **Browse Blobs**, then click the **Add Container** button at the top to create a blob container named `releases`. See section on how to [create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal#create-a-container?WT.mc_id=demo-functions-jasmineg) for more information.
 3. In the same storage account menu, navigate to **Access keys** and copy the connection string.
@@ -28,10 +37,13 @@ The following tutorial shows how to set up the function app from the Azure Porta
 
 4. Replace starter code with code from `NewRelease.csx`
 5. Replace contents of (or upload) `project.json` with this projects' project.json
+
+![Location of function url and GitHub secret](images/functionurl.png)
 6. In your new function, copy the url by clicking click **</> Get function URL**, and save for later. Repeat for **</> Get GitHub secret**. You will use these values to configure the webhook in GitHub.
 
 ### Configure GitHub Webhook
 1. Navigate to GitHub and select the repository to use with webhook. Navgiate to the repository's settings.
+![Adding a webhook in GitHub](images/addgithubwebhook.png)
 2. In the menu on the left of the repository settings, select webhooks and click **add a webhook** button.
 3. Follow the table to configure your settings:
 
@@ -43,13 +55,20 @@ The following tutorial shows how to set up the function app from the Azure Porta
 | **Event triggers** | Let me select individual events | We only want to trigger on release events.  |
 
 4. Click **add webhook**.
+
+![Creating a new app in GitHub](images/newghapplication.png)
 5. Navigate to your GitHub user settings, then to **Developer Applications**. Click **New OAuth App** and create an app with a homepage url and callback url of your choice, as they will not be used in the app. Copy and save the application name for later use.
 6. Go back to the portal and to the function app **Application settings**, scroll to and click **+ Add new setting**. Name the setting `ReleaseNotes` and paste the copied GitHub OAuth App name into the value field. Click **Save**.
 
 ### Test the application
+
 Create a new release in the repository. Fill out the required fields and click **Publish release**. The generated blob will be a markdown file named as the release title.
-Monitor and review the functions' execution history in the **Monitor** context menu of the function.
-To run the function again without creating another release, go to the configured webhook in GitHub to redeliver it.
+
+![Function execution history](images/monitorfunction.png)
+_Monitor and review the functions' execution history in the **Monitor** context menu of the function._
+
+![Redelivering a GitHub webhook](images/redeliverwebhook.png)
+_To run the function again without creating another release, go to the configured webhook in GitHub to redeliver it._
 
 ## Resources
 - [Introduction to Azure Functions](https://docs.microsoft.com/en-us/azure/azure-functions/functions-overview?WT.mc_id=demo-functions-jasmineg)
