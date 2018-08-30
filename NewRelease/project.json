@@ -1,0 +1,10 @@
+{
+  "frameworks": {
+    "net46":{
+      "dependencies": {
+        "WindowsAzure.Storage": "9.0.0",
+        "Octokit": "0.29.0"
+      }
+    }
+   }
+}
