@@ -1,3 +1,9 @@
+---
+services: functions, storage
+platforms: dotnet
+author: paladique
+---
+
 # GitHub Release Notes Generator
 A serverless tool for generating a release notes document for projects hosted on GitHub.
 
