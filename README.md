@@ -41,7 +41,7 @@ The following tutorial shows how to set up the function app from the Azure Porta
 2. Navigate to the new function, from the overview, click and open **Application settings**, scroll to and click **+ Add new setting**. Name the setting `StorageAccountConnectionString` and paste the copied connection string into the value field. Click **Save**
 3. In the function app, add a C# GitHub webhook function. See section on how to [Create a GitHub webhook triggered function](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-github-webhook-triggered-function#create-a-github-webhook-triggered-function?WT.mc_id=demo-functions-jasmineg) to get started.
 
-4. Replace starter code with code from `NewRelease.csx`
+4. Replace starter code with code from `NewRelease.cs`
 5. Replace contents of (or upload) `project.json` with this projects' project.json
 
 ![Location of function url and GitHub secret](images/functionurl.png)

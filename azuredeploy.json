@@ -74,8 +74,8 @@
                   "value": "[toLower(parameters('storageAccountConnectionString'))]"
               },
               {
-                "name": "ReleaseNotes",
-                "value": "[toLower(parameters('gitHubAppName'))]"
+                "name": "ReleaseNotesAppToken",
+                "value": "[toLower(parameters('gitHubAppToken'))]"
               }
           ]
         }
