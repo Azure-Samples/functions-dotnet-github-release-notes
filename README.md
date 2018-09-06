@@ -19,72 +19,74 @@ _Rendered markdown file of example release notes_
 
 The generator is a [function app](https://docs.microsoft.com/en-us/azure/azure-functions/functions-overview?WT.mc_id=demo-functions-jasmineg) containing a [GitHub webhook](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-github-webhook-triggered-function?WT.mc_id=demo-functions-jasmineg) function that creates a Markdown file whenever a new release is created, using [Azure Blob Storage](https://azure.microsoft.com/en-us/services/storage/blobs?WT.mc_id=demo-functions-jasmineg).
 
-### Prerequisites
+## Prerequisites
 
 - [Azure](https://azure.microsoft.com/en-us/free?WT.mc_id=demo-functions-jasmineg) account.
 - [GitHub](https://github.com/join) account with an active repository.
 
-## Portal Quickstart
+### Portal Quickstart
 
-The following tutorial shows how to set up the function app from the Azure Portal:
+The following tutorial shows how to set up the function app from a forked version of the repository in the Azure Portal:
 
-### Create a Blob Container
+#### Create a Blob Container
 
 ![Creating a new storage account container](images/newcontainer.png)
 
-1. Navigate to the Azure Portal and create a storage account. See the [Create a storage account quickstart](https://docs.microsoft.com/en-us/azure/storage/common/storage-quickstart-create-account?tabs=portal#create-a-general-purpose-storage-account?WT.mc_id=demo-functions-jasmineg) to get started. 
-2. Navigate to the new storage account, navigate to the **Blob Service** section, select **Browse Blobs**, then click the **Add Container** button at the top to create a blob container named `releases`. See section on how to [create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal#create-a-container?WT.mc_id=demo-functions-jasmineg) for more information.
-3. In the same storage account menu, navigate to **Access keys** and copy the connection string.
+ 1. Follow the first two sections of the following walkthrough on how to [create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal?WT.mc_id=demo-functions-jasmineg). Name the container `releases`
+ 2. In the storage account menu, navigate to **Access keys** and copy the connection string for this field. Save for later.
 
-### Create and Configure a GitHub Webhook Triggered Function
-1. Create a function app. See section on how to [create a function app](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-azure-function#create-a-function-app?WT.mc_id=demo-functions-jasmineg) to get started.
-2. Navigate to the new function, from the overview, click and open **Application settings**, scroll to and click **+ Add new setting**. Name the setting `StorageAccountConnectionString` and paste the copied connection string into the value field. Click **Save**
-3. In the function app, add a C# GitHub webhook function. See section on how to [Create a GitHub webhook triggered function](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-github-webhook-triggered-function#create-a-github-webhook-triggered-function?WT.mc_id=demo-functions-jasmineg) to get started.
+#### Deploy from a Forked GitHub Repository
+1. Create a new function app. See section on how to [create a function app](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-azure-function#create-a-function-app?WT.mc_id=demo-functions-jasmineg) to get started.
 
-4. Replace starter code with code from `NewRelease.cs`
-5. Replace contents of (or upload) `project.json` with this projects' project.json
 
+![Selecting a deplyment option in the Portal](images/deployment.png)
+
+2. In the **Platform features** tab, select **Deployment Options** and select **Setup** to set the deployment source.
+3. Choose GitHub in the **Choose Source** menu. After following the authentication instructions, point the deployment source to the forked repository.
+4. After it's been created, go to the new function app's Overview menu, click and open **Application settings**, scroll to and click **+ Add new setting**. Name the setting `StorageAccountConnectionString` and paste the copied connection string into the value field. Click **Save**
+5. In the same function app, go to **Function app settings** and change the runtime version to 2 if not already set.
+6. The the same function app settings, copy the default host key buy selecting the copy action and save for later.
 ![Location of function url and GitHub secret](images/functionurl.png)
-6. In your new function, copy the url by clicking click **</> Get function URL**, and save for later. Repeat for **</> Get GitHub secret**. You will use these values to configure the webhook in GitHub.
+7. In the `New Release` function, copy the url by clicking **</> Get function URL** and save for later. Repeat for **</> Get GitHub secret**.
 
-### Configure GitHub Webhook
-1. Navigate to GitHub and select the repository to use with webhook. Navgiate to the repository's settings.
+#### Configure GitHub Webhook
+1. In GitHub, select the repository to use with webhook. Navgiate to the repository's settings.
 ![Adding a webhook in GitHub](images/addgithubwebhook.png)
 2. In the menu on the left of the repository settings, select webhooks and click **add a webhook** button.
 3. Follow the table to configure your settings:
 
 | Setting | Suggested value | Description |
 |---|---|---|
-| **Payload URL** | Copied value | Use the value returned by  **</> Get function URL**. |
+| **Payload URL** | Copied values | Use the value returned by  **</> Get function URL** and the default host key so that it reads `https://functionappname.azurewebsites.net/api/NewRelease?code=[host key]` |
 | **Content type** | application/json | The function expects a JSON payload. |
 | **Secret**   | Copied value | Use the value returned by  **</> Get GitHub secret**. |
 | **Event triggers** | Let me select individual events | We only want to trigger on release events.  |
 
-4. Click **add webhook**.
+1. Click **add webhook**.
+2. Go to your GitHub user settings, then to **Developer Settings** > [Personal Access Tokens](https://github.com/settings/tokens) > **Generate New Token**. Give this token a name and copy the token. [Instructions on creating a Personal Access Token on GitHub](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/).
+3. Go back to the portal and to the function app **Application settings**, scroll to and click **+Add new setting**. Name the setting `ReleaseNotesAppToken` and paste the copied token into the value field.
 
-![Creating a new app in GitHub](images/newghapplication.png)
-5. Navigate to your GitHub user settings, then to **Developer Applications**. Click **New OAuth App** and create an app with a homepage url and callback url of your choice, as they will not be used in the app. Copy and save the application name for later use.
-6. Go back to the portal and to the function app **Application settings**, scroll to and click **+ Add new setting**. Name the setting `ReleaseNotes` and paste the copied GitHub OAuth App name into the value field. Click **Save**.
-
-## Using "Deploy to Azure"
+### Using "Deploy to Azure"
 Click the "Deploy to Azure" button above to replicate the services used in this sample on your Azure subscription. This requires an additonal step of filling out the relevant configuration settings.
 
 **Storage Account Connection String** You'll need a storage account with a blob container called `releases`. Follow the first two sections of the following walkthrough on how to [create a container](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal?WT.mc_id=demo-functions-jasmineg). In the storage account menu, navigate to **Access keys** and copy the connection string for this field.
 
-**GitHub App Name** [Create an OAuth App on Github](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/). Paste the App name into this field.
+**GitHub App Token** From your GitHub user settings, go to  **Developer Settings** > [Personal Access Tokens](https://github.com/settings/tokens) > **Generate New Token**. Give this token a description then copy and paste the generated token into this field. [Instructions on creating a Personal Access Token on GitHub](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/).
 
 ### Test the application
 
 Create a new release in the repository. Fill out the required fields and click **Publish release**. The generated blob will be a markdown file named as the release title.
 
 ![Function execution history](images/monitorfunction.png)
+
 _Monitor and review the functions' execution history in the **Monitor** context menu of the function._
 
 ![Redelivering a GitHub webhook](images/redeliverwebhook.png)
+
 _To run the function again without creating another release, go to the configured webhook in GitHub to redeliver it._
 
 ## Resources
 - [Introduction to Azure Functions](https://docs.microsoft.com/en-us/azure/azure-functions/functions-overview?WT.mc_id=demo-functions-jasmineg)
 - [Azure Functions triggers and bindings concepts](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings?WT.mc_id=demo-functions-jasmineg)
 - [Azure Functions C# script (.csx) developer reference](https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-csharp?WT.mc_id=demo-functions-jasmineg)
-- [OctoKit.NET](https://octokit.github.io/)
+- [Octokit.NET](https://octokit.github.io/)

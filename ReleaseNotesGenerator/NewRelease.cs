@@ -14,7 +14,7 @@ namespace ReleaseNotesGenerator
     public static class NewRelease
     {
         [FunctionName("NewRelease")]
-        public static async Task Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequest req, TraceWriter log)
+        public static async Task Run([HttpTrigger(AuthorizationLevel.Anonymous, Route = null, WebHookType="github")]HttpRequest req, TraceWriter log)
         {        
             // Get request body
             string requestBody = new StreamReader(req.Body).ReadToEnd();
