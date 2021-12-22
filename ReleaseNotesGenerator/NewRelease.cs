@@ -1,13 +1,13 @@
-using Octokit;
-using System;
 using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Host;
-using System.Threading.Tasks;
-using System.IO;
 using Newtonsoft.Json;
+using Octokit;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ReleaseNotesGenerator
 {
