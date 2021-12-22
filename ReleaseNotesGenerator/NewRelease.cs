@@ -9,9 +9,6 @@ using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 
-
-
-
 namespace ReleaseNotesGenerator
 {
     public static class NewRelease
