@@ -1,13 +1,13 @@
-using Octokit;
-using System;
-using Microsoft.WindowsAzure.Storage;
+using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Host;
-using System.Threading.Tasks;
-using System.IO;
 using Newtonsoft.Json;
+using Octokit;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ReleaseNotesGenerator
 {
@@ -25,17 +25,16 @@ namespace ReleaseNotesGenerator
             string releaseName = data?.release?.name;
             string repositoryName = data?.repository?.full_name;
 
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("StorageAccountConnectionString"));
-            var blobClient = storageAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference("releases");
-            var blob = container.GetBlockBlobReference(releaseName + ".md" );
+            BlobServiceClient blobServiceClient = new BlobServiceClient(Environment.GetEnvironmentVariable("StorageAccountConnectionString"));
+            var container = blobServiceClient.GetBlobContainerClient("releases");
+            var blob = container.GetBlobClient(releaseName + ".md" );
 
             string txtIssues = await GetReleaseDetails(IssueTypeQualifier.Issue, repositoryName);
             string txtPulls = await GetReleaseDetails(IssueTypeQualifier.PullRequest, repositoryName);
             
             var text = String.Format("# {0} \n {1} \n\n" + "# Issues Closed:" + txtIssues + "\n\n# Changes Merged:" + txtPulls, releaseName, releaseBody);
 
-            await blob.UploadTextAsync(text);    
+            await blob.UploadAsync(BinaryData.FromString(text), overwrite: true);    
         }
 
         public static async Task<string> GetReleaseDetails(IssueTypeQualifier type, string repoName)
